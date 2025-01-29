@@ -1,6 +1,7 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
-import Loader from 'react-loader-spinner'
+import { TailSpin } from 'react-loader-spinner'
+
 import {BsSearch} from 'react-icons/bs'
 import Header from '../Header'
 import FiltersGroup from '../FiltersGroup'
