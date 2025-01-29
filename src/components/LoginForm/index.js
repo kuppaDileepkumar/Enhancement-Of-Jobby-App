@@ -1,7 +1,6 @@
 import {Component} from 'react'
 import Cookies from 'js-cookie'
-//import {Redirect} from 'react-router-dom'
-import { Navigate } from 'react-router-dom';
+import {Redirect} from 'react-router-dom'
 
 
 import './index.css'
@@ -110,7 +109,7 @@ class LoginForm extends Component {
 
     const jwtToken = Cookies.get('jwt_token')
     if (jwtToken !== undefined) {
-      return <navigate to="/" />
+      return <Redirect to="/" />
     } // when already logged in user tries to access login page it redirects to home page
 
     return (
