@@ -1,67 +1,42 @@
-import {Component} from 'react'
+import { Component } from 'react'
 import Cookies from 'js-cookie'
-import { Navigate } from 'react-router-dom';
-//return <Navigate to="/somepath" />;
-//<Navigate to="/somepath" replace />
-
-
+import { Navigate } from 'react-router-dom'
 import './index.css'
 
 class LoginForm extends Component {
-  state = {username: '', password: '', showSubmitError: false, errorMsg: ''}
+  state = { username: '', password: '', showSubmitError: false, errorMsg: '' }
 
   onSubmitSuccess = jwtToken => {
-    const {history} = this.props
-    // console.log(history)
-    Cookies.set('jwt_token', jwtToken, {expires: 30})
-    history.replace('/')
+    // Set JWT token in cookies
+    Cookies.set('jwt_token', jwtToken, { expires: 30 })
+    this.setState({ redirectToHome: true }) // Trigger redirect after successful login
   }
 
   onSubmitFailure = errorMsg => {
-    this.setState({showSubmitError: true, errorMsg})
+    this.setState({ showSubmitError: true, errorMsg })
   }
 
   onChangePassword = event => {
-    this.setState({password: event.target.value})
+    this.setState({ password: event.target.value })
   }
 
   onChangeUsername = event => {
-    this.setState({username: event.target.value})
-    // console.log(event.target.value)
+    this.setState({ username: event.target.value })
   }
 
   submitForm = async event => {
-    // console.log(event)
     event.preventDefault()
-    const {username, password} = this.state
-    const userDetails = {username, password}
+    const { username, password } = this.state
+    const userDetails = { username, password }
     const loginApiUrl = 'https://apis.ccbp.in/login'
     const options = {
       method: 'POST',
       body: JSON.stringify(userDetails),
     }
     const response = await fetch(loginApiUrl, options)
-    // console.log(response)
-    //     Response {type: 'cors', url: 'https://apis.ccbp.in/login', redirected: false, status: 200, ok: true, …}
-    // body: (...)
-    // bodyUsed: true
-    // headers: Headers {}
-    // ok: true
-    // redirected: false
-    // status: 200
-    // statusText: ""
-    // type: "cors"
-    // url: "https://apis.ccbp.in/login"
-    // [[Prototype]]: Response
     const data = await response.json()
-    //     console.log(data)
-    //     {jwt_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZ…1MzJ9.D13s5wN3Oh59aa_qtXMo3Ec4wojOx0EZh8Xr5C5sRkU'}
-    // jwt_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhaHVsIiwicm9sZSI6IlBSSU1FX1VTRVIiLCJpYXQiOjE2MjMwNjU1MzJ9.D13s5wN3Oh59aa_qtXMo3Ec4wojOx0EZh8Xr5C5sRkU"
-    // [[Prototype]]: Object
-    // console.log(data.error_msg)
-    // username and password didn't match
 
-    if (response.ok === true) {
+    if (response.ok) {
       this.onSubmitSuccess(data.jwt_token)
     } else {
       this.onSubmitFailure(data.error_msg)
@@ -69,7 +44,7 @@ class LoginForm extends Component {
   }
 
   renderPasswordField = () => {
-    const {password} = this.state
+    const { password } = this.state
     return (
       <>
         <label className="input-label" htmlFor="password">
@@ -88,7 +63,7 @@ class LoginForm extends Component {
   }
 
   renderUserNameField = () => {
-    const {username} = this.state
+    const { username } = this.state
     return (
       <>
         <label className="input-label" htmlFor="username">
@@ -107,12 +82,13 @@ class LoginForm extends Component {
   }
 
   render() {
-    const {showSubmitError, errorMsg} = this.state
+    const { showSubmitError, errorMsg, redirectToHome } = this.state
 
+    // If JWT token is found, redirect to home page
     const jwtToken = Cookies.get('jwt_token')
-    if (jwtToken !== undefined) {
-      return <Navigate to="/" />
-    } // when already logged in user tries to access login page it redirects to home page
+    if (jwtToken !== undefined || redirectToHome) {
+      return <Navigate to="/" replace /> // Redirect to home page if logged in
+    }
 
     return (
       <>
