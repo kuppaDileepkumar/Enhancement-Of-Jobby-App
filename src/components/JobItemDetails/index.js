@@ -1,5 +1,6 @@
 import {Component} from 'react'
-import Loader from 'react-loader-spinner'
+import { TailSpin } from 'react-loader-spinner'
+
 import Cookies from 'js-cookie'
 import {BsFillBriefcaseFill, BsStarFill} from 'react-icons/bs'
 import {BiLinkExternal} from 'react-icons/bi'
