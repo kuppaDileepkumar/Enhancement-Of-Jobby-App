@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import Cookies from 'js-cookie'
 import { Navigate } from 'react-router-dom'
+
 import './index.css'
 
 class LoginForm extends Component {
